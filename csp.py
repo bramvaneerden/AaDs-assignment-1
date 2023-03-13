@@ -190,59 +190,132 @@ class CSP:
 
         :param empty_locations: list of empty locations that still need a value from self.numbers 
         """
-        # write an exhaustive search algorithm that tries to fill in the empty locations with permissible values
-        # in an attempt to find a valid solution that does not violate any of the constraints. Instead of checking all
-        # possible constraints after filling in a number, it checks only the relevant group constraints using the
-        # self.cell_to_groups data structure.
-        # return None if there is no solution. return the filled in solution (self.grid) otherwise if a solution is found.
+        
 
-        # Write a recursive function using backtracking to fill the empty_locations with permissible values
+        # Add the values in self.numbers to each entry in empty_locations
 
-        print("empty_locations: ", empty_locations)
-        print("self.grid: ", self.grid)
-        # print("constraints: ", self.constraints)
-        # print("groups: ", self.groups)
+        
+
+        
+        # print("empty_locations: ", empty_locations)
+
+        # print("empty_locations: ", empty_locations)
+        # print("self.grid: ", self.grid)
 
         # if there are no more empty locations, return the grid
         if len(empty_locations) == 0:
                     print("no more empty locations")
                     return self.grid
-        
-        # print("more empty locations")
 
         integers = list(self.numbers)
-        # print("self.numbers: ", self.numbers)
-        # print("integers[2]: ", integers[1])
+       
 
-        # try all numbers in self.numbers for the first empty location
-        options = len(integers)
-        for i in range(len(integers)):
-            print("optionsatstart: ", options)
-            options -= 1
-            # print("integers[i]: ", integers[i])
-            self.grid[empty_locations[0]] = integers[i]
-            
-            
-            # print("self.cell_to_groups[empty_locations[0]]: ", self.cell_to_groups[empty_locations[0]])
-            # print("self.grid[empty_locations[0]]: ", self.grid[empty_locations[0]])
-            print("self.cell_to_groups: ", self.cell_to_groups)
+        # # try all numbers in self.numbers for the first empty location
+        # options = len(integers)
+        # for i in range(len(integers)):
+        #     print("optionsatstart: ", options)
+        #     options -= 1
+        #     # print("integers[i]: ", integers[i])
+        #     self.grid[empty_locations[0]] += 1
+        #     print("self.grid: ", self.grid)
+        
+        #     # print("self.cell_to_groups: ", self.cell_to_groups)
 
-            # check if the current number satisfies the constraints for all groups that contain the current empty location
+        #     # check if the current number satisfies the constraints for all groups that contain the current empty location
+        #     if self.satisfies_group_constraints(self.cell_to_groups[empty_locations[0]]) == True:
+        #         print("True SGC")
+        #         # call the search function again with the remaining empty locations
+        #         return self.search(empty_locations[1:])
+            
+        #     elif self.satisfies_group_constraints(self.cell_to_groups[empty_locations[0]]) == False:
+        #         print("options atFalse: ", options)
+        #         if options == 0:
+        #             # implement backtracking
+        #             return self.search(empty_locations[0:])
+                
+        #         else:
+        #             # if the current number does not satisfy the constraints, set the current empty location to 0 and try the next number
+        #             self.grid[empty_locations[0]] = 0
+        #             # print("self.grid: ", self.grid)
+        
+
+        #check if other values of the group are in empty_locations
+        # print("empty_locations: ", empty_locations)
+        # print("self.cell_to_groups: ", self.cell_to_groups)
+    
+        # print("self.cell_to_groups: ", self.cell_to_groups[empty_locations[0]])
+        # for i in range(len(self.cell_to_groups[empty_locations[0]])):
+        #     print("group: ", self.groups[self.cell_to_groups[empty_locations[0]][i]])
+
+        #     #check if any of the other values of the group are in empty_locations
+        #     for j in range(len(self.groups[self.cell_to_groups[empty_locations[0]][i]])):
+        #         if self.groups[self.cell_to_groups[empty_locations[0]][i]][j] in empty_locations:
+        #             print("in empty_locations: ", self.groups[self.cell_to_groups[empty_locations[0]][i]][j])
+        #             # return self.search(empty_locations[1:])
+
+        FinalCell = False
+        loc1 = empty_locations[0]
+        print("loc1: ", loc1)
+        if len(empty_locations) > 1:
+            loc2 = empty_locations[1]
+            print("loc2: ", loc2)
+        else:
+            FinalCell = True
+
+                
+
+
+        while empty_locations != []:
+            
+
+
+            self.grid[loc1] += 1
+            print("self.grid: ", self.grid)
+
+            maxnumber = max(self.numbers)
+            print("maxnumber: ", maxnumber)
+
+            if self.grid[empty_locations[0]] > maxnumber:
+                print("maxnumber reached")
+                # copygrid = self.grid.copy()
+
+                return None
+
             if self.satisfies_group_constraints(self.cell_to_groups[empty_locations[0]]) == True:
                 print("True SGC")
-                # call the search function again with the remaining empty locations
-                return self.search(empty_locations[1:])
+
+                if FinalCell == True:
+                    print("FinalCell")
+                    return self.search(empty_locations[1:])
+
+                #try to fill in the next empty location
+                for i in range(len(integers)):
+                    self.grid[loc2] += 1
+                    print("self.grid:\n", self.grid)
+                    if self.satisfies_group_constraints(self.cell_to_groups[loc2]) == True:
+                        print("len(empty_locations): ", len(empty_locations))
+                        self.grid[loc2] = 0 
+                        
+                        print("self.grid before return:\n", self.grid)
+                        return self.search(empty_locations[1:])
+
+                print("self.grid before end:\n", self.grid)
+                self.grid[loc2] = 0
+                print("self.grid after end:\n", self.grid)     
+
             elif self.satisfies_group_constraints(self.cell_to_groups[empty_locations[0]]) == False:
-                print("options atFalse: ", options)
-                if options == 0:
-                    # implement backtracking
-                    return self.search(empty_locations[0:])
-                
-                else:
-                    # if the current number does not satisfy the constraints, set the current empty location to 0 and try the next number
-                    self.grid[empty_locations[0]] = 0
-                    # print("self.grid: ", self.grid)
+                continue
+
         
+
+
+
+
+
+
+
+
+
         # if no number satisfies the constraints, return None
         print("None")
         return None
